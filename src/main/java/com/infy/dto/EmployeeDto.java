@@ -31,21 +31,25 @@ public class EmployeeDto {
     @Email(message = "employee.email.invalid")
     private String email;
 
+    @NotEmpty(message = "employee.supervisor.must")
     private String supervisor;
-    private String departmentHead;
+
+    @NotEmpty(message = "employee.department.must")
+    private String department;
+
     private String benefitsCoordinator;
     private double allowance;
     private double pending;
     private double awarded;
-    private List<UUID> awaitingMyApproval;
-    private List<UUID> needsAttention;
+    private List<UUID> inbox;
+    private List<UUID> requests;
     private EmployeeType employeeType;
 
     public EmployeeDto() {
         super();
         this.allowance = 1000;
-        this.awaitingMyApproval = new ArrayList<>();
-        this.needsAttention = new ArrayList<>();
+        this.inbox = new ArrayList<>();
+        this.requests = new ArrayList<>();
         this.employeeType = EmployeeType.EMPLOYEE;
     }
 
@@ -56,13 +60,13 @@ public class EmployeeDto {
         this.lastName = employee.getLastName();
         this.email = employee.getEmail();
         this.supervisor = employee.getSupervisor();
-        this.departmentHead = employee.getDepartmentHead();
+        this.department = employee.getDepartment();
         this.benefitsCoordinator = employee.getBenefitsCoordinator();
         this.allowance = employee.getAllowance();
         this.pending = employee.getPending();
         this.awarded = employee.getAwarded();
-        this.awaitingMyApproval = employee.getAwaitingMyApproval();
-        this.needsAttention = employee.getNeedsAttention();
+        this.inbox = employee.getInbox();
+        this.requests = employee.getRequests();
         this.employeeType = employee.getEmployeeType();
     }
 
@@ -74,13 +78,13 @@ public class EmployeeDto {
                 this.lastName,
                 this.email,
                 this.supervisor,
-                this.departmentHead,
+                this.department,
                 this.benefitsCoordinator,
                 this.allowance,
                 this.pending,
                 this.awarded,
-                this.awaitingMyApproval,
-                this.needsAttention,
+                this.inbox,
+                this.requests,
                 this.employeeType
         );
     }

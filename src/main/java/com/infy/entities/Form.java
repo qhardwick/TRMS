@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@Table
+@Table("Form")
 public class Form {
 
     @PrimaryKey

@@ -23,9 +23,8 @@ public class FormDto {
 
     private UUID id;
 
-    @NotEmpty(message = "form.username.must")
-    private String username;
 
+    private String username;
     private String firstName;
     private String lastName;
     private String email;
@@ -38,7 +37,7 @@ public class FormDto {
 
     @NotEmpty(message = "form.description.must")
     private String description;
-
+     
     @NotEmpty(message = "form.date.must")
     @FutureOrPresent(message = "form.date.future")
     private LocalDate eventDate;
@@ -69,7 +68,6 @@ public class FormDto {
     private String departmentHeadApproval;
 
     private boolean urgent;
-
     public FormDto() {
         super();
         this.id = UUID.randomUUID();

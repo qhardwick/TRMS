@@ -1,15 +1,19 @@
 package com.infy.controllers;
 
 import com.infy.aspects.BenCo;
+import com.infy.aspects.CurrentUser;
 import com.infy.aspects.LoggedIn;
 import com.infy.dto.EmployeeDto;
+import com.infy.dto.FormDto;
 import com.infy.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -24,7 +28,7 @@ public class EmployeeController {
     }
 
     // Add new Employee:
-    @BenCo
+    //@BenCo
     @PostMapping
     public Mono<ResponseEntity<EmployeeDto>> addEmployee(@RequestBody EmployeeDto newEmployeeDto, WebSession session) {
         return employeeService.addEmployee(newEmployeeDto)
@@ -39,6 +43,23 @@ public class EmployeeController {
         return employeeService.findByUsername(username)
                 .map(ResponseEntity::ok)
                 .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+    }
+
+    // Update Employee:
+    @BenCo
+    @PutMapping("/{username}")
+    public Mono<ResponseEntity<EmployeeDto>> updateEmployee(@PathVariable String username, @RequestBody EmployeeDto updatedEmployeeDto, WebSession session) {
+        return employeeService.updateEmployee(username, updatedEmployeeDto)
+                .map(updatedEmployee -> ResponseEntity.ok(updatedEmployee))
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+    }
+
+    // Delete Employee:
+    //@BenCo
+    @DeleteMapping("/{username}")
+    public Mono<ResponseEntity<Void>> deleteEmployee(@PathVariable String username, WebSession session) {
+        return employeeService.deleteEmployee(username)
+                .map(deletedEmployee -> ResponseEntity.noContent().build());
     }
 
     // Login:
@@ -57,5 +78,14 @@ public class EmployeeController {
     public Mono<ResponseEntity<Void>> logout(WebSession session) {
         session.invalidate();
         return Mono.just(ResponseEntity.noContent().build());
+    }
+
+    // Submit Reimbursement Request:
+    @CurrentUser
+    @PostMapping("/{username}/requests")
+    public Mono<ResponseEntity<FormDto>> submitRequest(@PathVariable String username, @Valid @RequestBody FormDto requestForm, WebSession session) {
+        return employeeService.submitRequest(username, requestForm)
+                .map(submittedForm -> ResponseEntity.status(HttpStatus.CREATED).body(submittedForm))
+                .switchIfEmpty(Mono.just(ResponseEntity.badRequest().build()));
     }
 }

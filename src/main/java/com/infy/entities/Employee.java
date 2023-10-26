@@ -29,8 +29,7 @@ public class Employee {
 
     private String supervisor;
 
-    @Column("department_head")
-    private String departmentHead;
+    private String department;
 
     @Column("BenCo")
     private String benefitsCoordinator;
@@ -41,11 +40,9 @@ public class Employee {
 
     private double awarded;
 
-    @Column("awaiting_approval")
-    private List<UUID> awaitingMyApproval;
+    private List<UUID> inbox;
 
-    @Column("needs_attention")
-    private List<UUID> needsAttention;
+    private List<UUID> requests;
 
     @Column("role")
     private EmployeeType employeeType;
@@ -53,8 +50,8 @@ public class Employee {
     public Employee() {
         super();
         this.allowance = 1000;
-        this.awaitingMyApproval = new ArrayList<>();
-        this.needsAttention = new ArrayList<>();
+        this.inbox = new ArrayList<>();
+        this.requests = new ArrayList<>();
         this.employeeType = EmployeeType.EMPLOYEE;
     }
 

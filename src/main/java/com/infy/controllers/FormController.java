@@ -24,6 +24,10 @@ public class FormController {
     // Add new Form:
     @PostMapping
     public Mono<ResponseEntity<FormDto>> addForm(@Valid @RequestBody FormDto newFormDto) {
+        // Q: If the date is coming in as a string, how do we convert it to a LocalDate?
+        // A: We can use the LocalDate.parse() method.
+        // Q: Where?
+
         return formService.addForm(newFormDto)
                 .map(form -> ResponseEntity.ok(form))
                 .switchIfEmpty(Mono.just(ResponseEntity.badRequest().build()));
@@ -49,7 +53,6 @@ public class FormController {
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteFormById(@PathVariable("id") String id) {
         return formService.deleteFormById(UUID.fromString(id))
-                .map(form -> ResponseEntity.ok(form))
-                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+                .map(deletedForm -> ResponseEntity.noContent().build());
     }
 }
