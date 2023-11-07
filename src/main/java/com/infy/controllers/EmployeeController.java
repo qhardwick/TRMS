@@ -1,6 +1,7 @@
 package com.infy.controllers;
 
-import com.infy.aspects.BenCo;
+import com.infy.aspects.Admin;
+import com.infy.aspects.Benco;
 import com.infy.aspects.CurrentUser;
 import com.infy.aspects.LoggedIn;
 import com.infy.dto.EmployeeDto;
@@ -28,7 +29,7 @@ public class EmployeeController {
     }
 
     // Add new Employee:
-    //@BenCo
+    @Admin
     @PostMapping
     public Mono<ResponseEntity<EmployeeDto>> addEmployee(@RequestBody EmployeeDto newEmployeeDto, WebSession session) {
         return employeeService.addEmployee(newEmployeeDto)
@@ -46,7 +47,7 @@ public class EmployeeController {
     }
 
     // Update Employee:
-    @BenCo
+    @Benco
     @PutMapping("/{username}")
     public Mono<ResponseEntity<EmployeeDto>> updateEmployee(@PathVariable String username, @RequestBody EmployeeDto updatedEmployeeDto, WebSession session) {
         return employeeService.updateEmployee(username, updatedEmployeeDto)
@@ -55,7 +56,7 @@ public class EmployeeController {
     }
 
     // Delete Employee:
-    //@BenCo
+    //@Benco
     @DeleteMapping("/{username}")
     public Mono<ResponseEntity<Void>> deleteEmployee(@PathVariable String username, WebSession session) {
         return employeeService.deleteEmployee(username)

@@ -51,8 +51,8 @@ public class AuthenticationAspect {
         return pjp.proceed();
     }
 
-    // Verify that the User is a BenCo:
-    @Around("benCo()")
+    // Verify that the User is a Benco:
+    @Around("benco()")
     public Object verifyBenCo(ProceedingJoinPoint pjp) throws Throwable {
         session = getSession(pjp);
         if(session == null || session.getAttribute(SessionFields.LOGGED_USER) == null) {
@@ -60,6 +60,20 @@ public class AuthenticationAspect {
         }
         EmployeeDto loggedUser = session.getAttribute(SessionFields.LOGGED_USER);
         if(loggedUser.getEmployeeType() != EmployeeType.BENCO) {
+            return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
+        }
+        return pjp.proceed();
+    }
+
+    // Verify that the User is an Admin:
+    @Around("admin()")
+    public Object verifyAdmin(ProceedingJoinPoint pjp) throws Throwable {
+        session = getSession(pjp);
+        if(session == null || session.getAttribute(SessionFields.LOGGED_USER) == null) {
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
+        EmployeeDto loggedUser = session.getAttribute(SessionFields.LOGGED_USER);
+        if(loggedUser.getEmployeeType() != EmployeeType.ADMIN) {
             return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
         }
         return pjp.proceed();
@@ -81,7 +95,11 @@ public class AuthenticationAspect {
     @Pointcut("@annotation(com.infy.aspects.CurrentUser)")
     public void currentUser() {/* Hook for @CurrentUser */}
 
-    // @BenCo:
-    @Pointcut("@annotation(com.infy.aspects.BenCo)")
-    public void benCo() {/* Hook for @BenCo */}
+    // @Benco:
+    @Pointcut("@annotation(com.infy.aspects.Benco)")
+    public void benco() {/* Hook for @Benco */}
+
+    // @Admin:
+    @Pointcut("@annotation(com.infy.aspects.Admin)")
+    public void admin() {/* Hook for @Admin */}
 }

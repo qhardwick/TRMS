@@ -1,5 +1,5 @@
 package com.infy.constants;
 
 public enum EmployeeType {
-    EMPLOYEE, BENCO
+    EMPLOYEE, BENCO, ADMIN
 }

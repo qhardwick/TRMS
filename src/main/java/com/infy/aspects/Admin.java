@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface BenCo { // Implementation defined in AuthenticationAspect
+public @interface Admin { // Implementation defined in AuthenticationAspect
 }

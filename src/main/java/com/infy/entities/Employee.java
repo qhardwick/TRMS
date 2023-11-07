@@ -31,7 +31,7 @@ public class Employee {
 
     private String department;
 
-    @Column("BenCo")
+    @Column("Benco")
     private String benefitsCoordinator;
 
     private double allowance;
