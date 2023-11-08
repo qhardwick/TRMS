@@ -70,28 +70,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     // include it in the form. This may change later.
     @Override
     public Mono<FormDto> submitRequest(String username, FormDto requestForm) {
-        Mono<Employee> requestingEmployee = employeeRepository.findById(username)
-            .flatMap(employee -> {
-                // Set the employee's username, first name, last name, and email in the request form:
-                requestForm.setUsername(employee.getUsername());
-                requestForm.setFirstName(employee.getFirstName());
-                requestForm.setLastName(employee.getLastName());
-                requestForm.setEmail(employee.getEmail());
 
-                // Calculate the amount to be reimbursed, adjusting for the employee's allowance if necessary:
-                // Will likely either need to add rounding or change to BigDecimal:
-                double reimbursement = requestForm.getCost() * requestForm.getEventType().getRate();
-                if(employee.getAwarded() + employee.getPending() + reimbursement > employee.getAllowance()) {
-                    reimbursement = employee.getAllowance() - employee.getAwarded() - employee.getPending();
-                }
-                requestForm.setReimbursement(reimbursement);
-
-                // Adjust the employee's pending reimbursement and add the request to their list of requests:
-                employee.setPending(employee.getPending() + reimbursement);
-                employee.getRequests().add(requestForm.getId());
-
-                return employeeRepository.save(employee);
-        });
+        Mono<FormDto> updatedFormMono = addEmployeeInfoToForm(username, requestForm);
 
         // Save the request form to the database:
         WebClient webClient = WebClient.create();
@@ -109,4 +89,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return submittedForm;
     }
+
+
+    private Mono<FormDto> addEmployeeInfoToForm(String username, FormDto requestForm) {
+        return employeeRepository.findById(username)
+                .map(employee -> {
+                    requestForm.setUsername(employee.getUsername());
+                    requestForm.setFirstName(employee.getFirstName());
+                    requestForm.setLastName(employee.getLastName());
+                    requestForm.setEmail(employee.getEmail());
+
+                    // Calculate the amount to be reimbursed. Will likely need to implement rounding or change to BigDecimal.
+                    // At the moment, we're not adjusting for the employee's allowance until Benco approval. May change later.
+                    requestForm.setReimbursement(requestForm.getCost() * requestForm.getEventType().getRate());
+
+                    employee.getRequests().add(requestForm.getId());
+                    employeeRepository.save(employee).subscribe();
+
+                    return requestForm;
+                });
+    }
+
 }

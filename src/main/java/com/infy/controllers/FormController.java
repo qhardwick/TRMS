@@ -2,6 +2,8 @@ package com.infy.controllers;
 
 import com.infy.dto.FormDto;
 import com.infy.services.FormService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("trms/forms")
+@OpenAPIDefinition(info = @Info(title = "TRMS Form API", version = "1.0", description = "TRMS Form Information"))
 public class FormController {
 
     private FormService formService;

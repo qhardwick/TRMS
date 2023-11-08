@@ -3,7 +3,6 @@ package com.infy.dto;
 import com.infy.entities.Department;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.validation.Valid;

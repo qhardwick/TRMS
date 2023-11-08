@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@Valid
 public class EmployeeDto {
 
     @NotEmpty(message = "employee.username.must")

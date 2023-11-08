@@ -7,6 +7,8 @@ import com.infy.aspects.LoggedIn;
 import com.infy.dto.EmployeeDto;
 import com.infy.dto.FormDto;
 import com.infy.services.EmployeeService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/trms/employees")
+@OpenAPIDefinition(info = @Info(title = "TRMS Employee API", version = "1.0", description = "TRMS Employee Information"))
 public class EmployeeController {
 
     private EmployeeService employeeService;
@@ -31,7 +34,7 @@ public class EmployeeController {
     // Add new Employee:
     @Admin
     @PostMapping
-    public Mono<ResponseEntity<EmployeeDto>> addEmployee(@RequestBody EmployeeDto newEmployeeDto, WebSession session) {
+    public Mono<ResponseEntity<EmployeeDto>> addEmployee(@Valid @RequestBody EmployeeDto newEmployeeDto, WebSession session) {
         return employeeService.addEmployee(newEmployeeDto)
                 .map(newEmployee -> ResponseEntity.created(URI.create("/employees/" + newEmployee.getUsername())).body(newEmployee))
                 .switchIfEmpty(Mono.just(ResponseEntity.badRequest().build()));

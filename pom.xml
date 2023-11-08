@@ -87,9 +87,8 @@
 
 		<!-- AWS S3 SDK holds the client classes used for communicating with AWS Simple Storage Service (S3) -->
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>1.12.565</version>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
 		</dependency>
 
 		<!-- Core dependency for the JUnit 5 testing framework. -->
@@ -123,6 +122,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
+		<!-- OpenApi for Swagger -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-webflux-ui</artifactId>
+			<version>1.5.12</version>
 		</dependency>
 	</dependencies>
 

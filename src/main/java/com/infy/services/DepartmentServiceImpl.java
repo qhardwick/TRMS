@@ -47,6 +47,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     // Delete Department by name:
     @Override
     public Mono<Void> deleteDepartmentByName(String name) {
-        departmentRepository.deleteById(name);
+        return departmentRepository.deleteById(name);
     }
 }
