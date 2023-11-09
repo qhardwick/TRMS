@@ -1,8 +1,7 @@
 package com.infy.aspects;
 
 import com.infy.constants.EmployeeType;
-import com.infy.dto.EmployeeDto;
-import com.infy.entities.Employee;
+import com.infy.dtos.EmployeeDto;
 import com.infy.utils.SessionFields;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,7 +14,6 @@ import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 @Aspect
 @Component

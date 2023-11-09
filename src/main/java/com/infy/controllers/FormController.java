@@ -1,6 +1,6 @@
 package com.infy.controllers;
 
-import com.infy.dto.FormDto;
+import com.infy.dtos.FormDto;
 import com.infy.services.FormService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;

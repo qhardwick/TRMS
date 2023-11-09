@@ -1,6 +1,6 @@
 package com.infy.services;
 
-import com.infy.dto.DepartmentDto;
+import com.infy.dtos.DepartmentDto;
 import reactor.core.publisher.Mono;
 
 public interface DepartmentService {

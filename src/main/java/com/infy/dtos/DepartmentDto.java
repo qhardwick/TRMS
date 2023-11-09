@@ -1,4 +1,4 @@
-package com.infy.dto;
+package com.infy.dtos;
 
 import com.infy.entities.Department;
 import lombok.AllArgsConstructor;

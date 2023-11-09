@@ -1,4 +1,4 @@
-package com.infy.dto;
+package com.infy.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infy.constants.EmployeeType;
@@ -6,7 +6,6 @@ import com.infy.entities.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;

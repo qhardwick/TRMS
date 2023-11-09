@@ -1,7 +1,6 @@
 package com.infy.services;
 
-import com.infy.dto.DepartmentDto;
-import com.infy.entities.Department;
+import com.infy.dtos.DepartmentDto;
 import com.infy.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

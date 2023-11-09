@@ -1,13 +1,15 @@
 package com.infy.services;
 
-import com.infy.dto.EmployeeDto;
-import com.infy.dto.FormDto;
+import com.infy.dtos.EmployeeDto;
+import com.infy.dtos.FormDto;
 import com.infy.entities.Employee;
 import com.infy.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -71,7 +73,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Mono<FormDto> submitRequest(String username, FormDto requestForm) {
 
-        Mono<FormDto> updatedFormMono = addEmployeeInfoToForm(username, requestForm);
+        // Get Employee from database:
+        Mono<Employee> requestingEmployeeMono = employeeRepository.findById(username);
+
+        // Add employee info to the form:
+        Mono<FormDto> updatedFormMono = addEmployeeInfoToForm(requestingEmployeeMono, requestForm);
 
         // Save the request form to the database:
         WebClient webClient = WebClient.create();
@@ -82,6 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .retrieve()
                 .bodyToMono(FormDto.class);
 
+        // Check if the form contains a direct supervisor pre-approval attachment:
         if(requestForm.getSupervisorApproval() != null) {
             // TODO: Call supervisor approval method
             return submittedForm;
@@ -90,24 +97,32 @@ public class EmployeeServiceImpl implements EmployeeService {
         return submittedForm;
     }
 
+    // Add Form to Approver's Inbox:
+    private Mono<Void> addToInbox(String username, UUID formId) {
+        Mono<Employee> approverMono = employeeRepository.findById(username);
+        return approverMono.map(approver -> {
+            approver.getInbox().add(formId);
+            return approver;
+        }).flatMap(employeeRepository::save).then();
+    }
 
-    private Mono<FormDto> addEmployeeInfoToForm(String username, FormDto requestForm) {
-        return employeeRepository.findById(username)
-                .map(employee -> {
-                    requestForm.setUsername(employee.getUsername());
-                    requestForm.setFirstName(employee.getFirstName());
-                    requestForm.setLastName(employee.getLastName());
-                    requestForm.setEmail(employee.getEmail());
+    // Utility method to add employee info to a form:
+    private Mono<FormDto> addEmployeeInfoToForm(Mono<Employee> employeeMono, FormDto requestForm) {
+        return employeeMono.map(employee -> {
+            requestForm.setUsername(employee.getUsername());
+            requestForm.setFirstName(employee.getFirstName());
+            requestForm.setLastName(employee.getLastName());
+            requestForm.setEmail(employee.getEmail());
 
-                    // Calculate the amount to be reimbursed. Will likely need to implement rounding or change to BigDecimal.
-                    // At the moment, we're not adjusting for the employee's allowance until Benco approval. May change later.
-                    requestForm.setReimbursement(requestForm.getCost() * requestForm.getEventType().getRate());
+            // Calculate the amount to be reimbursed. Will likely need to implement rounding or change to BigDecimal.
+            // At the moment, we're not adjusting for the employee's allowance until Benco approval. May change later.
+            requestForm.setReimbursement(requestForm.getCost() * requestForm.getEventType().getRate());
 
-                    employee.getRequests().add(requestForm.getId());
-                    employeeRepository.save(employee).subscribe();
+            employee.getRequests().add(requestForm.getId());
+            employeeRepository.save(employee).subscribe();
 
-                    return requestForm;
-                });
+            return requestForm;
+        });
     }
 
 }

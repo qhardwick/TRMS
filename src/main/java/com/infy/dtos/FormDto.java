@@ -1,4 +1,4 @@
-package com.infy.dto;
+package com.infy.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infy.constants.Event;

@@ -1,7 +1,7 @@
 package com.infy.controllers;
 
 import com.infy.aspects.Admin;
-import com.infy.dto.DepartmentDto;
+import com.infy.dtos.DepartmentDto;
 import com.infy.services.DepartmentService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
