@@ -4,6 +4,8 @@ import com.infy.dtos.EmployeeDto;
 import com.infy.dtos.FormDto;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 public interface EmployeeService {
 
     // Add new Employee:
@@ -23,4 +25,7 @@ public interface EmployeeService {
 
     // Submit Request:
     Mono<FormDto> submitRequest(String username, FormDto requestForm);
+
+    // Approve Request:
+    Mono<Void> approveRequest(String username, UUID requestId);
 }

@@ -41,16 +41,46 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Mono<EmployeeDto> updateEmployee(String username, EmployeeDto updatedEmployeeDto) {
 
         Mono<Employee> employeeToBeUpdatedMono = employeeRepository.findById(username);
-        return employeeToBeUpdatedMono.map(employee -> {
+        return employeeToBeUpdatedMono.flatMap(employee -> {
             if(updatedEmployeeDto.getFirstName() != null) {
                 employee.setFirstName(updatedEmployeeDto.getFirstName());
             }
             if(updatedEmployeeDto.getLastName() != null) {
                 employee.setLastName(updatedEmployeeDto.getLastName());
             }
-            //if(updatedEmployee)
+            if(updatedEmployeeDto.getEmail() != null) {
+                employee.setEmail(updatedEmployeeDto.getEmail());
+            }
+            if(updatedEmployeeDto.getSupervisor() != null) {
+                employee.setSupervisor(updatedEmployeeDto.getSupervisor());
+            }
+            if(updatedEmployeeDto.getDepartment() != null) {
+                employee.setDepartment(updatedEmployeeDto.getDepartment());
+            }
+            if(updatedEmployeeDto.getBenefitsCoordinator() != null) {
+                employee.setBenefitsCoordinator(updatedEmployeeDto.getBenefitsCoordinator());
+            }
+            // Allowance, pending, and awarded are primitives and will need to be updated elsewhere to allow for 0.
+            if(updatedEmployeeDto.getAllowance() != 0) {
+                employee.setAllowance(updatedEmployeeDto.getAllowance());
+            }
+            if(updatedEmployeeDto.getPending() != 0) {
+                employee.setPending(updatedEmployeeDto.getPending());
+            }
+            if(updatedEmployeeDto.getAwarded() != 0) {
+                employee.setAwarded(updatedEmployeeDto.getAwarded());
+            }
+            if(updatedEmployeeDto.getInbox() != null) {
+                employee.setInbox(updatedEmployeeDto.getInbox());
+            }
+            if(updatedEmployeeDto.getRequests() != null) {
+                employee.setRequests(updatedEmployeeDto.getRequests());
+            }
+            if(updatedEmployeeDto.getEmployeeType() != null) {
+                employee.setEmployeeType(updatedEmployeeDto.getEmployeeType());
+            }
 
-            return employee;
+            return employeeRepository.save(employee);
         }).map(EmployeeDto::new);
     }
 
@@ -61,6 +91,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     // Login:
+    // Exactly the same as the findByUsername() method, but we're keeping it separate for now in case we want to add
+    // additional functionality later.
     @Override
     public Mono<EmployeeDto> login(String username) {
         return employeeRepository.findById(username)
@@ -90,11 +122,42 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // Check if the form contains a direct supervisor pre-approval attachment:
         if(requestForm.getSupervisorApproval() != null) {
-            // TODO: Call supervisor approval method
+            //approveRequest()
             return submittedForm;
         }
 
         return submittedForm;
+    }
+
+    // Approve Request:
+    @Override
+    public Mono<Void> approveRequest(String username, UUID requestId) {
+
+        // Get Approving Employee from database:
+        Mono<Employee> approverMono = employeeRepository.findById(username);
+
+        // Get Form from database:
+        WebClient webClient = WebClient.create();
+        Mono<FormDto> approvedFormMono = webClient
+                .get()
+                .uri(formsUrl + requestId)
+                .retrieve()
+                .bodyToMono(FormDto.class);
+
+        // Add Form to Approver's Inbox:
+        Mono<Void> updatedApproverMono = addToInbox(username, requestId);
+
+        // Remove Form from Approver's Inbox:
+        //Mono<Void> updatedFormMono = removeFromInbox(username, requestId);
+
+        // Save the updated form to the database:
+        //Mono<FormDto> updatedFormDtoMono = updatedFormMono.thenReturn(approvedFormMono.block());
+
+        // Check if the form contains a direct supervisor pre-approval attachment:
+        if(approvedFormMono.block().getSupervisorApproval() != null) {
+
+        }
+        return Mono.empty();
     }
 
     // Add Form to Approver's Inbox:

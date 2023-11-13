@@ -30,7 +30,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     // Update Department by name:
     @Override
-    public Mono<DepartmentDto> updateDepartmentByName(String name, DepartmentDto updatedDepartmentDto) {
+    public Mono<DepartmentDto> updateDepartment(String name, DepartmentDto updatedDepartmentDto) {
         return departmentRepository.findById(name).flatMap(department -> {
 
             if(updatedDepartmentDto.getName() != null)
@@ -45,7 +45,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     // Delete Department by name:
     @Override
-    public Mono<Void> deleteDepartmentByName(String name) {
+    public Mono<Void> deleteDepartment(String name) {
         return departmentRepository.deleteById(name);
     }
 }

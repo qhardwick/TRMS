@@ -58,7 +58,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Reactor Test provides testing utilities for Reactor Core and Reactor Netty. -->
+		<!-- Reactor Test provides testing utilities for Reactor Core and Reactor Netty like StepVerifier. -->
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>
@@ -95,7 +95,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.9.2</version>
+			<version>5.7.0</version>
 			<scope>test</scope>
 		</dependency>
 

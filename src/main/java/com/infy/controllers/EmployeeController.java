@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/trms/employees")
@@ -49,7 +50,7 @@ public class EmployeeController {
     }
 
     // Update Employee:
-    @Benco
+    @Admin
     @PutMapping("/{username}")
     public Mono<ResponseEntity<EmployeeDto>> updateEmployee(@PathVariable("username") String username, @RequestBody EmployeeDto updatedEmployeeDto, WebSession session) {
         return employeeService.updateEmployee(username, updatedEmployeeDto)
@@ -58,7 +59,7 @@ public class EmployeeController {
     }
 
     // Delete Employee:
-    //@Benco
+    @Admin
     @DeleteMapping("/{username}")
     public Mono<ResponseEntity<Void>> deleteEmployee(@PathVariable("username") String username, WebSession session) {
         return employeeService.deleteEmployee(username)
@@ -90,5 +91,14 @@ public class EmployeeController {
         return employeeService.submitRequest(username, requestForm)
                 .map(submittedForm -> ResponseEntity.created(URI.create("/employees/" + username + "/requests/" + requestForm.getId())).body(submittedForm))
                 .switchIfEmpty(Mono.just(ResponseEntity.badRequest().build()));
+    }
+
+    // Approve Reimbursement Request:
+    // Unsure of the Mapping here. We're removing the request from the approver's inbox, but posting it to either the department head or benco.
+    @CurrentUser
+    @DeleteMapping("/{username}/inbox/{requestId}")
+    public Mono<ResponseEntity<Void>> approveRequest(@PathVariable("username") String username, @PathVariable("requestId") String requestId, WebSession session) {
+        return employeeService.approveRequest(username, UUID.fromString(requestId))
+                .map(approvedRequest -> ResponseEntity.noContent().build());
     }
 }

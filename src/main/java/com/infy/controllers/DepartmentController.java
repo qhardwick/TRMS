@@ -48,7 +48,7 @@ public class DepartmentController {
     @Admin
     @PutMapping("/{name}")
     public Mono<ResponseEntity<DepartmentDto>> updateDepartmentByName(@PathVariable("name") String name, @Valid @RequestBody DepartmentDto updatedDepartmentDto, WebSession session) {
-        return departmentService.updateDepartmentByName(name, updatedDepartmentDto)
+        return departmentService.updateDepartment(name, updatedDepartmentDto)
                 .map(departmentDto -> ResponseEntity.ok(departmentDto))
                 .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
@@ -57,7 +57,7 @@ public class DepartmentController {
     @Admin
     @DeleteMapping("/{name}")
     public Mono<ResponseEntity<Void>> deleteDepartmentByName(@PathVariable("name") String name, WebSession session) {
-        return departmentService.deleteDepartmentByName(name)
+        return departmentService.deleteDepartment(name)
                 .map(deletedDepartment -> ResponseEntity.noContent().build());
     }
 }

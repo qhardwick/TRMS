@@ -12,8 +12,8 @@ public interface DepartmentService {
     Mono<DepartmentDto> findDepartmentByName(String name);
 
     // Update Department by name:
-    Mono<DepartmentDto> updateDepartmentByName(String name, DepartmentDto updatedDepartmentDto);
+    Mono<DepartmentDto> updateDepartment(String name, DepartmentDto updatedDepartmentDto);
 
     // Delete Department by name:
-    Mono<Void> deleteDepartmentByName(String name);
+    Mono<Void> deleteDepartment(String name);
 }
